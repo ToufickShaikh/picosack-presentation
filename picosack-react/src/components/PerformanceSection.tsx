@@ -9,6 +9,8 @@ const PerformanceSection: React.FC = () => {
     triggerOnce: true,
   });
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -84,7 +86,7 @@ const PerformanceSection: React.FC = () => {
                         strokeLinecap="round"
                         strokeDasharray={`${2 * Math.PI * 80}`}
                         initial={{ strokeDashoffset: 2 * Math.PI * 80 }}
-                        animate={inView ? { strokeDashoffset: 2 * Math.PI * 80 * (1 - 0.57) } : { strokeDashoffset: 2 * Math.PI * 80 }}
+                        animate={inView && !prefersReducedMotion ? { strokeDashoffset: 2 * Math.PI * 80 * (1 - 0.57) } : { strokeDashoffset: 2 * Math.PI * 80 }}
                         transition={{ duration: 2, delay: 0.8, ease: "easeInOut" }}
                         filter="url(#glow)"
                         transform="rotate(-90 100 100)"
@@ -118,7 +120,7 @@ const PerformanceSection: React.FC = () => {
                         <motion.div 
                           className="capacity-bar standard-bar"
                           initial={{ scaleY: 0 }}
-                          animate={inView ? { scaleY: 0.36 } : { scaleY: 0 }}
+                          animate={inView && !prefersReducedMotion ? { scaleY: 0.36 } : { scaleY: 0.36 }}
                           transition={{ duration: 1, delay: 1, ease: "easeOut" }}
                         />
                         <div className="bar-info">
@@ -133,7 +135,7 @@ const PerformanceSection: React.FC = () => {
                         <motion.div 
                           className="capacity-bar picosack-bar"
                           initial={{ scaleY: 0 }}
-                          animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
+                          animate={inView && !prefersReducedMotion ? { scaleY: 1 } : { scaleY: 1 }}
                           transition={{ duration: 1.2, delay: 1.3, ease: "easeOut" }}
                         />
                         <div className="bar-info">

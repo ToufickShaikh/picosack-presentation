@@ -26,31 +26,41 @@ const Navigation: React.FC = () => {
   const [showQRScanner, setShowQRScanner] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
+    let ticking = false;
+
+    const measure = () => {
+      const scrolled = window.scrollY > 100;
+      setIsScrolled(prev => (prev !== scrolled ? scrolled : prev));
 
       const sections = navItems.map(item => ({
         id: item.id,
         element: document.getElementById(item.id),
       }));
 
-      const currentSection = sections.find(section => {
+      let current: string | null = null;
+      for (const section of sections) {
         if (section.element) {
           const rect = section.element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom > 100;
+          if (rect.top <= 110 && rect.bottom > 110) {
+            current = section.id;
+            break;
+          }
         }
-        return false;
-      });
+      }
+      if (current) setActiveSection(prev => (prev !== current ? current! : prev));
+      ticking = false;
+    };
 
-      if (currentSection) {
-        setActiveSection(currentSection.id);
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(measure);
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    measure();
+    return () => window.removeEventListener('scroll', onScroll as any);
   }, []);
 
   const scrollToSection = (sectionId: string) => {

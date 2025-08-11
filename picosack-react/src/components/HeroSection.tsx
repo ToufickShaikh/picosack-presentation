@@ -150,7 +150,7 @@ const HeroSection: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <span>Explore Solution</span>
-                <span className="btn-icon">�</span>
+                <span className="btn-icon">➡️</span>
               </motion.button>
               <motion.button
                 className="btn btn-secondary"
@@ -159,7 +159,7 @@ const HeroSection: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <span>Contact Us</span>
-                <span className="btn-icon">�</span>
+                <span className="btn-icon">📞</span>
               </motion.button>
             </motion.div>
           </div>

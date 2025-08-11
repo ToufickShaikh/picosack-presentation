@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './CTASection.css';
 
@@ -8,6 +8,7 @@ const CTASection: React.FC = () => {
     threshold: 0.1,
     triggerOnce: true,
   });
+  const [showQRScanner, setShowQRScanner] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -36,6 +37,16 @@ const CTASection: React.FC = () => {
       opacity: 1,
       transition: { duration: 0.6, ease: "easeOut" as const },
     },
+  };
+
+  // Add handlers for WiFi demo + opening demo site
+  const handleWiFiDemo = () => {
+    alert('🛜 Connecting to PicoSack-Demo WiFi...\n📱 Demo menu will load automatically!');
+    setShowQRScanner(true);
+  };
+
+  const openDemoSite = () => {
+    window.open('https://picosack.netlify.app/', '_blank');
   };
 
   return (
@@ -113,8 +124,21 @@ const CTASection: React.FC = () => {
             </motion.div>
 
             <motion.div variants={buttonVariants} className="cta-actions">
+              {/* New Connect Demo WiFi button (replaces Invest Now) */}
+              <motion.button
+                className="btn btn-primary"
+                onClick={handleWiFiDemo}
+                whileHover={{ scale: 1.05, y: -3 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span>Connect Demo WiFi</span>
+                <span className="btn-icon">📡</span>
+              </motion.button>
+
+              {/* Request Demo opens the Netlify demo directly */}
               <motion.button
                 className="btn btn-outline"
+                onClick={openDemoSite}
                 whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -249,6 +273,51 @@ const CTASection: React.FC = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* QR Scanner Modal */}
+      <AnimatePresence>
+        {showQRScanner && (
+          <motion.div
+            className="qr-scanner-modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowQRScanner(false)}
+          >
+            <motion.div
+              className="qr-scanner-content"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="qr-header">
+                <h3>📱 Scan QR Code for Demo</h3>
+                <button onClick={() => setShowQRScanner(false)}>✕</button>
+              </div>
+              <div className="qr-code">
+                <div className="qr-grid">
+                  {[...Array(25)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`qr-dot ${Math.random() > 0.5 ? 'filled' : ''}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p>Scan to open PicoSack Digital Menu Demo</p>
+              <motion.button
+                className="demo-button"
+                onClick={openDemoSite}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                🌐 Open Demo Website
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
