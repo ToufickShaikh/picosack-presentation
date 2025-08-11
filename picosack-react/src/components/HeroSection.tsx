@@ -2,9 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './HeroSection.css';
-import qr from '../../qr.svg';
 
 const HeroSection: React.FC = () => {
+  // Use QR from public folder to avoid CRA restriction on imports outside src
+  const qrSrc = `${process.env.PUBLIC_URL ?? ''}/qr.svg`;
+
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -180,7 +182,7 @@ const HeroSection: React.FC = () => {
                 <div className="device-screen">
                   {/* Replace background image content with QR showcase */}
                   <div className="qr-wrapper">
-                    <img src={qr} alt="PicoSack Demo QR" className="qr-image" />
+                    <img src={qrSrc} alt="PicoSack Demo QR" className="qr-image" />
                     <div className="qr-caption">Scan to open digital menu demo</div>
                   </div>
                 </div>
