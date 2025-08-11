@@ -114,28 +114,6 @@ const CTASection: React.FC = () => {
 
             <motion.div variants={buttonVariants} className="cta-actions">
               <motion.button
-                className="btn btn-primary pulse-animation"
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 0 0 rgba(255, 107, 53, 0.7)",
-                    "0 0 0 15px rgba(255, 107, 53, 0)",
-                    "0 0 0 0 rgba(255, 107, 53, 0.7)"
-                  ],
-                  scale: [1, 1.05, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <span>Invest Now</span>
-                <span className="btn-icon">💰</span>
-              </motion.button>
-
-              <motion.button
                 className="btn btn-outline"
                 whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.95 }}
