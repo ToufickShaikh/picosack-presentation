@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 import ProblemSection from './components/ProblemSection';
 import CompetitorSection from './components/CompetitorSection';
@@ -15,7 +14,6 @@ function App() {
   return (
     <div className="App">
       <ProgressBar />
-      <Navigation />
       <main>
         <HeroSection />
         <ProblemSection />

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './HeroSection.css';
+import qr from '../../qr.svg';
 
 const HeroSection: React.FC = () => {
   const [ref, inView] = useInView({
@@ -177,36 +178,10 @@ const HeroSection: React.FC = () => {
             >
               <div className="device-frame">
                 <div className="device-screen">
-                  <img src="/pico-bg.png" alt="PicoSack Device Interface" className="device-image" />
-                  <div className="screen-overlay">
-                    <div className="interface-elements">
-                      <div className="menu-items">
-                        <motion.div
-                          className="menu-item"
-                          initial={{ x: -20, opacity: 0 }}
-                          animate={inView ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
-                          transition={{ duration: 0.4, delay: 1.2 }}
-                        >
-                          📋 Digital Menu
-                        </motion.div>
-                        <motion.div
-                          className="menu-item"
-                          initial={{ x: -20, opacity: 0 }}
-                          animate={inView ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
-                          transition={{ duration: 0.4, delay: 1.4 }}
-                        >
-                          🛒 Quick Order
-                        </motion.div>
-                        <motion.div
-                          className="menu-item"
-                          initial={{ x: -20, opacity: 0 }}
-                          animate={inView ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
-                          transition={{ duration: 0.4, delay: 1.6 }}
-                        >
-                          💳 Payment
-                        </motion.div>
-                      </div>
-                    </div>
+                  {/* Replace background image content with QR showcase */}
+                  <div className="qr-wrapper">
+                    <img src={qr} alt="PicoSack Demo QR" className="qr-image" />
+                    <div className="qr-caption">Scan to open digital menu demo</div>
                   </div>
                 </div>
               </div>

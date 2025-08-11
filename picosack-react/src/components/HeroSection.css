@@ -283,6 +283,31 @@
   filter: blur(20px);
 }
 
+/* QR showcase inside device */
+.qr-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.qr-image {
+  width: min(70%, 260px);
+  height: auto;
+}
+
+.qr-caption {
+  font-size: 0.9rem;
+  color: #374151;
+  background: rgba(0,0,0,0.04);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
 @media (max-width: 768px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -315,4 +340,12 @@
   .container {
     padding: 0 1rem;
   }
+
+  .qr-image { width: min(80%, 220px); }
+  .qr-caption { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .qr-image { width: min(85%, 200px); }
+  .qr-caption { font-size: 0.8rem; }
 }
