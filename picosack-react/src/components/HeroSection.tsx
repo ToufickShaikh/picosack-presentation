@@ -22,9 +22,7 @@ const HeroSection: React.FC = () => {
         const text = await res.text();
         if (!cancelled) setSvgMarkup(text);
       })
-      .catch(() => {
-        if (!cancelled) setSvgFailed(true);
-      });
+      .catch(() => { if (!cancelled) setSvgFailed(true); });
     return () => { cancelled = true; };
   }, [pngFailed, svgUrl]);
 
@@ -43,9 +41,9 @@ const HeroSection: React.FC = () => {
       <div className="hero-background">
         <div className="hero-grid"></div>
         <div className="floating-elements">
-          <motion.div className="float-element float-1" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const }} />
-          <motion.div className="float-element float-2" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay: 2 }} />
-          <motion.div className="float-element float-3" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay: 4 }} />
+          <motion.div className="float-element float-1" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' as const }} />
+          <motion.div className="float-element float-2" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' as const, delay: 2 }} />
+          <motion.div className="float-element float-3" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' as const, delay: 4 }} />
         </div>
       </div>
 
@@ -96,22 +94,22 @@ const HeroSection: React.FC = () => {
           </div>
 
           <motion.div variants={itemVariants} className="hero-showcase">
-            <motion.div className="device-mockup" initial={{ rotateY: -15, scale: 0.8 }} animate={inView ? { rotateY: -15, scale: 1 } : { rotateY: -15, scale: 0.8 }} transition={{ duration: 0.8, delay: 0.4 }} whileHover={{ scale: 1.05, rotateY: -10 }}>
-              <div className="device-frame">
-                <div className="device-screen">
-                  <div className="qr-wrapper">
-                    {!pngFailed ? (
-                      <img src={pngUrl} onError={() => setPngFailed(true)} alt="PicoSack Website QR (PNG)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
-                    ) : svgMarkup && !svgFailed ? (
-                      <div className="qr-svg" dangerouslySetInnerHTML={{ __html: svgMarkup }} aria-label="PicoSack Website QR (SVG)" />
-                    ) : (
-                      <img src={pngGenerated} alt="PicoSack Website QR (Generated)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
-                    )}
-                    <div className="qr-caption">Scan to open website demo</div>
-                  </div>
-                </div>
+            {/* New simplified QR card, always visible */}
+            <motion.div className="qr-card" initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }} transition={{ duration: 0.6, delay: 0.4 }}>
+              <div className="qr-card-header">Website Demo</div>
+              <div className="qr-card-body">
+                {!pngFailed ? (
+                  <img src={pngUrl} onError={() => setPngFailed(true)} alt="PicoSack Website QR (PNG)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
+                ) : svgMarkup && !svgFailed ? (
+                  <div className="qr-svg" dangerouslySetInnerHTML={{ __html: svgMarkup }} aria-label="PicoSack Website QR (SVG)" />
+                ) : (
+                  <img src={pngGenerated} alt="PicoSack Website QR (Generated)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
+                )}
               </div>
-              <div className="device-glow"></div>
+              <div className="qr-card-footer">
+                <div className="qr-caption">Scan or</div>
+                <a className="btn btn-tertiary" href={demoUrl} target="_blank" rel="noreferrer">Open Website</a>
+              </div>
             </motion.div>
           </motion.div>
         </motion.div>
