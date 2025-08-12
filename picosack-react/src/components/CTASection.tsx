@@ -10,6 +10,11 @@ const CTASection: React.FC = () => {
   });
   const [showQRScanner, setShowQRScanner] = useState(false);
 
+  // WiFi QR (open network) to be shown on last slide
+  const wifiSSID = 'PicoSack-Digital-Menu';
+  const wifiQRData = `WIFI:T:nopass;S:${wifiSSID};;`;
+  const wifiQRUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(wifiQRData)}`;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -249,6 +254,17 @@ const CTASection: React.FC = () => {
                 </div>
               </div>
             </motion.div>
+          </motion.div>
+
+          {/* WiFi QR card at the end */}
+          <motion.div variants={itemVariants} className="wifi-qr-card cta-wifi-card">
+            <img src={wifiQRUrl} alt={`WiFi QR (SSID: ${wifiSSID})`} className="wifi-qr-image" />
+            <div className="wifi-qr-caption">
+              <div className="wifi-qr-title">Connect to WiFi</div>
+              <div className="wifi-qr-ssid">SSID: {wifiSSID}</div>
+              <div className="wifi-qr-note">Open network (no password)</div>
+              <a className="btn-link" href={wifiQRUrl} target="_blank" rel="noreferrer">Download QR</a>
+            </div>
           </motion.div>
         </motion.div>
       </div>

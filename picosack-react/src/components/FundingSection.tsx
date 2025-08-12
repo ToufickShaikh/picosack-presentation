@@ -31,6 +31,14 @@ const phaseData: PhaseData[] = [
   }
 ];
 
+// Budget allocation data
+const allocation = [
+  { key: 'rd', label: 'R&D', amount: 150000, colorClass: 'rd-color' },
+  { key: 'pilot', label: 'Pilot', amount: 150000, colorClass: 'pilot-color' },
+  { key: 'launch', label: 'Launch', amount: 100000, colorClass: 'launch-color' },
+];
+const totalBudget = allocation.reduce((sum, a) => sum + a.amount, 0);
+
 const FundingSection: React.FC = () => {
   const [ref, inView] = useInView({
     threshold: 0.1,
@@ -113,168 +121,70 @@ const FundingSection: React.FC = () => {
                 <div className="budget-allocation">
                   <h4>Budget Allocation</h4>
                   <div className="allocation-wrapper">
-                    <motion.svg viewBox="0 0 400 400" className="allocation-chart">
-                      <defs>
-                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-                          <feGaussianBlur stdDeviation="4" result="blur"/>
-                          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                        </filter>
-                        <linearGradient id="rdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#FF6B35"/>
-                          <stop offset="100%" stopColor="#FF8C5A"/>
-                        </linearGradient>
-                        <linearGradient id="pilotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#004E89"/>
-                          <stop offset="100%" stopColor="#3A7CA5"/>
-                        </linearGradient>
-                        <linearGradient id="launchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#1e293b"/>
-                          <stop offset="100%" stopColor="#475569"/>
-                        </linearGradient>
-                      </defs>
-                      
-                      {/* Background circle */}
-                      <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2"/>
-                      
-                      {/* R&D Slice (37.5%) */}
-                      <motion.path 
-                        d="M200,80 A120,120 0 0,1 320,200 L200,200 Z" 
-                        fill="url(#rdGradient)"
-                        filter="url(#shadow)"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5, type: "spring" }}
-                        whileHover={{ scale: 1.05 }}
-                        style={{ transformOrigin: "200px 200px" }}
-                      />
-                      
-                      {/* Pilot Slice (37.5%) */}
-                      <motion.path 
-                        d="M320,200 A120,120 0 0,1 200,320 L200,200 Z" 
-                        fill="url(#pilotGradient)"
-                        filter="url(#shadow)"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                        transition={{ duration: 0.8, delay: 0.7, type: "spring" }}
-                        whileHover={{ scale: 1.05 }}
-                        style={{ transformOrigin: "200px 200px" }}
-                      />
-                      
-                      {/* Launch Slice (25%) */}
-                      <motion.path 
-                        d="M200,320 A120,120 0 0,1 80,200 L200,200 Z" 
-                        fill="url(#launchGradient)"
-                        filter="url(#shadow)"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                        transition={{ duration: 0.8, delay: 0.9, type: "spring" }}
-                        whileHover={{ scale: 1.05 }}
-                        style={{ transformOrigin: "200px 200px" }}
-                      />
-                      
-                      {/* Center circle */}
-                      <circle cx="200" cy="200" r="40" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" strokeWidth="2"/>
-                      <text x="200" y="195" fontSize="12" fill="#f8fafc" textAnchor="middle" fontWeight="600">TOTAL</text>
-                      <text x="200" y="210" fontSize="16" fill="#FF6B35" textAnchor="middle" fontWeight="700">₹4L</text>
-                    </motion.svg>
-                    
-                    <div className="allocation-legend">
-                      <motion.div 
-                        className="legend-item"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{ delay: 1.2, duration: 0.4 }}
-                      >
-                        <div className="legend-color rd-color"></div>
-                        <div className="legend-text">
-                          <span className="legend-label">R&D</span>
-                          <span className="legend-value">₹1.5L (37.5%)</span>
-                        </div>
-                      </motion.div>
-                      
-                      <motion.div 
-                        className="legend-item"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{ delay: 1.4, duration: 0.4 }}
-                      >
-                        <div className="legend-color pilot-color"></div>
-                        <div className="legend-text">
-                          <span className="legend-label">Pilot</span>
-                          <span className="legend-value">₹1.5L (37.5%)</span>
-                        </div>
-                      </motion.div>
-                      
-                      <motion.div 
-                        className="legend-item"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{ delay: 1.6, duration: 0.4 }}
-                      >
-                        <div className="legend-color launch-color"></div>
-                        <div className="legend-text">
-                          <span className="legend-label">Launch</span>
-                          <span className="legend-value">₹1L (25%)</span>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-                </div>
+                    <div className="allocation-chart">
+                      <div className="allocation-bar" aria-label="Budget allocation segmented bar">
+                        {allocation.map((a, idx) => {
+                          const percent = (a.amount / totalBudget) * 100;
+                          const title = `${a.label} · ₹${a.amount.toLocaleString('en-IN')} · ${percent.toFixed(1)}%`;
+                          const short = `${a.label} ${percent.toFixed(0)}%`;
+                          return (
+                            <motion.div
+                              key={a.key}
+                              className={`allocation-segment ${a.colorClass}`}
+                              style={{ width: `${percent}%` }}
+                              initial={{ scaleX: 0, opacity: 0 }}
+                              animate={inView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+                              transition={{ duration: 0.8, delay: 0.4 + idx * 0.15 }}
+                              title={title}
+                              role="img"
+                              aria-label={title}
+                            >
+                              <span className="segment-label">{short}</span>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
 
-                <div className="timeline">
-                  <h4>6-Week Timeline</h4>
-                  <div className="timeline-container">
-                    <motion.div 
-                      className="timeline-line"
-                      initial={{ scaleX: 0 }}
-                      animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
-                      transition={{ duration: 1.2, delay: 1.6 }}
-                    />
-                    
-                    <motion.div 
-                      className="timeline-milestone"
-                      style={{ left: '33%' }}
-                      initial={{ scale: 0, y: 20 }}
-                      animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
-                      transition={{ duration: 0.5, delay: 2.0, type: "spring", stiffness: 200 }}
-                    >
-                      <div className="milestone-marker rd-marker"></div>
-                      <div className="milestone-content">
-                        <div className="milestone-week">Week 2</div>
-                        <div className="milestone-title">MVP Ready</div>
-                        <div className="milestone-desc">Firmware + portal MVP</div>
+                      {/* New 6-week timeline directly under allocation */}
+                      <div className="timeline-segmented">
+                        <h4>6-Week Timeline</h4>
+                        <div className="timeline-bar" role="img" aria-label="6-week plan timeline">
+                          <motion.div className="timeline-phase rd-phase" style={{ width: '33.33%' }} initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }} transition={{ delay: 0.9 }}>
+                            <span className="phase-title">R&D</span>
+                            <span className="phase-weeks">Weeks 1–2</span>
+                          </motion.div>
+                          <motion.div className="timeline-phase pilot-phase" style={{ width: '33.33%' }} initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }} transition={{ delay: 1.0 }}>
+                            <span className="phase-title">Pilot</span>
+                            <span className="phase-weeks">Weeks 3–4</span>
+                          </motion.div>
+                          <motion.div className="timeline-phase launch-phase" style={{ width: '33.34%' }} initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }} transition={{ delay: 1.1 }}>
+                            <span className="phase-title">Launch</span>
+                            <span className="phase-weeks">Weeks 5–6</span>
+                          </motion.div>
+                        </div>
+                        <div className="week-scale" aria-hidden="true">
+                          {Array.from({ length: 6 }).map((_, i) => (
+                            <span key={i} className="tick">{i + 1}</span>
+                          ))}
+                        </div>
                       </div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="timeline-milestone"
-                      style={{ left: '66%' }}
-                      initial={{ scale: 0, y: 20 }}
-                      animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
-                      transition={{ duration: 0.5, delay: 2.2, type: "spring", stiffness: 200 }}
-                    >
-                      <div className="milestone-marker pilot-marker"></div>
-                      <div className="milestone-content">
-                        <div className="milestone-week">Week 4</div>
-                        <div className="milestone-title">Pilot Testing</div>
-                        <div className="milestone-desc">10–20 field units</div>
-                      </div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="timeline-milestone"
-                      style={{ left: '95%' }}
-                      initial={{ scale: 0, y: 20 }}
-                      animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
-                      transition={{ duration: 0.5, delay: 2.4, type: "spring", stiffness: 200 }}
-                    >
-                      <div className="milestone-marker launch-marker"></div>
-                      <div className="milestone-content">
-                        <div className="milestone-week">Week 6</div>
-                        <div className="milestone-title">Soft Launch</div>
-                        <div className="milestone-desc">Chennai rollout + feedback</div>
-                      </div>
-                    </motion.div>
+                    </div>
+
+                    <div className="allocation-legend enhanced">
+                      {allocation.map((a, idx) => {
+                        const percent = (a.amount / totalBudget) * 100;
+                        return (
+                          <motion.div key={a.key} className="legend-item" initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }} transition={{ delay: 0.9 + idx * 0.1 }}>
+                            <div className={`legend-color ${a.colorClass}`}></div>
+                            <div className="legend-text">
+                              <span className="legend-label">{a.label}</span>
+                              <span className="legend-value">₹{a.amount.toLocaleString('en-IN')}</span>
+                              <span className="legend-percent">{percent.toFixed(1)}%</span>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>

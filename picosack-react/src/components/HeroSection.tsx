@@ -1,50 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './HeroSection.css';
 
 const HeroSection: React.FC = () => {
-  // Use QR from public folder to avoid CRA restriction on imports outside src
-  const qrSrc = `${process.env.PUBLIC_URL ?? ''}/qr.svg`;
+  const pngUrl = `${process.env.PUBLIC_URL ?? ''}/qr.png?v=1`;
+  const svgUrl = `${process.env.PUBLIC_URL ?? ''}/qr.svg?v=1`;
   const demoUrl = 'https://picosack.netlify.app/';
-  const fallbackDemoQR = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(demoUrl)}`;
-  const [qrImgSrc, setQrImgSrc] = useState(qrSrc);
+  const pngGenerated = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(demoUrl)}`;
 
-  // WiFi QR for open network: PicoSack-Digital-Menu
-  const wifiSSID = 'PicoSack-Digital-Menu';
-  const wifiQRData = `WIFI:T:nopass;S:${wifiSSID};;`;
-  const wifiQRUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(wifiQRData)}`;
+  const [pngFailed, setPngFailed] = useState(false);
+  const [svgMarkup, setSvgMarkup] = useState<string | null>(null);
+  const [svgFailed, setSvgFailed] = useState(false);
 
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
+  useEffect(() => {
+    if (!pngFailed) return; // only try SVG if PNG failed
+    let cancelled = false;
+    fetch(svgUrl, { cache: 'no-store' })
+      .then(async (res) => {
+        if (!res.ok) throw new Error('QR SVG load failed');
+        const text = await res.text();
+        if (!cancelled) setSvgMarkup(text);
+      })
+      .catch(() => {
+        if (!cancelled) setSvgFailed(true);
+      });
+    return () => { cancelled = true; };
+  }, [pngFailed, svgUrl]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.2,
-      },
-    },
-  };
+  const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
 
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: "easeOut" as const },
-    },
-  };
+  const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.2 } } };
+  const itemVariants = { hidden: { y: 30, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: 'easeOut' as const } } };
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (section) section.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -52,54 +43,14 @@ const HeroSection: React.FC = () => {
       <div className="hero-background">
         <div className="hero-grid"></div>
         <div className="floating-elements">
-          <motion.div
-            className="float-element float-1"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut" as const,
-            }}
-          />
-          <motion.div
-            className="float-element float-2"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut" as const,
-              delay: 2,
-            }}
-          />
-          <motion.div
-            className="float-element float-3"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 180, 360],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut" as const,
-              delay: 4,
-            }}
-          />
+          <motion.div className="float-element float-1" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const }} />
+          <motion.div className="float-element float-2" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay: 2 }} />
+          <motion.div className="float-element float-3" animate={{ y: [0, -20, 0], rotate: [0, 180, 360] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" as const, delay: 4 }} />
         </div>
       </div>
 
       <div className="container">
-        <motion.div
-          className="hero-container"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-        >
+        <motion.div className="hero-container" variants={containerVariants} initial="hidden" animate={inView ? 'visible' : 'hidden'}>
           <div className="hero-content">
             <motion.div variants={itemVariants} className="hero-badge">
               <span className="badge-icon">🚀</span>
@@ -119,101 +70,48 @@ const HeroSection: React.FC = () => {
 
             <motion.div variants={itemVariants} className="hero-stats">
               <div className="stat-item">
-                <motion.div
-                  className="stat-number"
-                  initial={{ scale: 0 }}
-                  animate={inView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                >
-                  ₹1,500
-                </motion.div>
+                <motion.div className="stat-number" initial={{ scale: 0 }} animate={inView ? { scale: 1 } : { scale: 0 }} transition={{ duration: 0.6, delay: 0.8 }}>₹1,500</motion.div>
                 <div className="stat-label">Starting Price</div>
               </div>
               <div className="stat-item">
-                <motion.div
-                  className="stat-number"
-                  initial={{ scale: 0 }}
-                  animate={inView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ duration: 0.6, delay: 1 }}
-                >
-                  0
-                </motion.div>
+                <motion.div className="stat-number" initial={{ scale: 0 }} animate={inView ? { scale: 1 } : { scale: 0 }} transition={{ duration: 0.6, delay: 1 }}>0</motion.div>
                 <div className="stat-label">App Downloads</div>
               </div>
               <div className="stat-item">
-                <motion.div
-                  className="stat-number"
-                  initial={{ scale: 0 }}
-                  animate={inView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ duration: 0.6, delay: 1.2 }}
-                >
-                  100%
-                </motion.div>
+                <motion.div className="stat-number" initial={{ scale: 0 }} animate={inView ? { scale: 1 } : { scale: 0 }} transition={{ duration: 0.6, delay: 1.2 }}>100%</motion.div>
                 <div className="stat-label">Offline Ready</div>
               </div>
             </motion.div>
 
             <motion.div variants={itemVariants} className="hero-actions">
-              <motion.button
-                className="btn btn-primary"
-                onClick={() => scrollToSection('problem')}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.button className="btn btn-primary" onClick={() => scrollToSection('problem')} whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}>
                 <span>Explore Solution</span>
                 <span className="btn-icon">➡️</span>
               </motion.button>
-              <motion.button
-                className="btn btn-secondary"
-                onClick={() => scrollToSection('cta')}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.button className="btn btn-secondary" onClick={() => scrollToSection('cta')} whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.95 }}>
                 <span>Contact Us</span>
                 <span className="btn-icon">📞</span>
               </motion.button>
             </motion.div>
           </div>
 
-          <motion.div
-            variants={itemVariants}
-            className="hero-showcase"
-          >
-            <motion.div
-              className="device-mockup"
-              initial={{ rotateY: -15, scale: 0.8 }}
-              animate={inView ? { rotateY: -15, scale: 1 } : { rotateY: -15, scale: 0.8 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              whileHover={{ scale: 1.05, rotateY: -10 }}
-            >
+          <motion.div variants={itemVariants} className="hero-showcase">
+            <motion.div className="device-mockup" initial={{ rotateY: -15, scale: 0.8 }} animate={inView ? { rotateY: -15, scale: 1 } : { rotateY: -15, scale: 0.8 }} transition={{ duration: 0.8, delay: 0.4 }} whileHover={{ scale: 1.05, rotateY: -10 }}>
               <div className="device-frame">
                 <div className="device-screen">
-                  {/* Replace background image content with QR showcase */}
                   <div className="qr-wrapper">
-                    <img src={qrImgSrc} onError={() => setQrImgSrc(fallbackDemoQR)} alt="PicoSack Demo QR" className="qr-image" />
-                    <div className="qr-caption">Scan to open digital menu demo</div>
+                    {!pngFailed ? (
+                      <img src={pngUrl} onError={() => setPngFailed(true)} alt="PicoSack Website QR (PNG)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
+                    ) : svgMarkup && !svgFailed ? (
+                      <div className="qr-svg" dangerouslySetInnerHTML={{ __html: svgMarkup }} aria-label="PicoSack Website QR (SVG)" />
+                    ) : (
+                      <img src={pngGenerated} alt="PicoSack Website QR (Generated)" className="qr-image" width={280} height={280} loading="eager" decoding="async" />
+                    )}
+                    <div className="qr-caption">Scan to open website demo</div>
                   </div>
                 </div>
               </div>
               <div className="device-glow"></div>
-            </motion.div>
-
-            {/* New WiFi QR card */}
-            <motion.div
-              className="wifi-qr-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <img src={wifiQRUrl} alt={`WiFi QR (SSID: ${wifiSSID})`} className="wifi-qr-image" />
-              <div className="wifi-qr-caption">
-                <div className="wifi-qr-title">Connect to WiFi</div>
-                <div className="wifi-qr-ssid">SSID: {wifiSSID}</div>
-                <div className="wifi-qr-note">Open network (no password)</div>
-              </div>
-              <div className="wifi-qr-actions">
-                <a className="btn-link" href={wifiQRUrl} target="_blank" rel="noreferrer">Download QR</a>
-              </div>
             </motion.div>
           </motion.div>
         </motion.div>

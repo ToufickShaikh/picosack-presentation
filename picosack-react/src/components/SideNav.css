@@ -69,6 +69,171 @@
   font-size: 12px;
 }
 
+/* text-based side nav */
+.side-nav.text-nav {
+  position: fixed;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1200;
+}
+
+.side-nav.text-nav .side-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all .2s ease;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.side-nav.text-nav .side-nav-item:hover,
+.side-nav.text-nav .side-nav-item.active {
+  background: rgba(255, 107, 53, 0.15);
+  border-color: rgba(255, 107, 53, 0.5);
+  color: #fff;
+}
+
+.item-icon { font-size: 14px; }
+.item-label { font-size: 12px; font-weight: 600; }
+
+/* Mobile: bottom sticky nav */
 @media (max-width: 900px) {
-  .side-nav { display: none; }
+  .side-nav.text-nav {
+    top: auto;
+    bottom: 12px;
+    right: 50%;
+    transform: translateX(50%);
+    flex-direction: row;
+    gap: 6px;
+    background: rgba(15,23,42,0.6);
+    padding: 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+  }
+  .side-nav.text-nav .side-nav-item { padding: 8px 10px; }
+  .side-nav.text-nav { display: flex !important; justify-content: space-between; width: calc(100% - 24px); left: 12px; right: 12px; }
+  .side-nav.text-nav .side-nav-item { flex: 1 1 auto; min-width: 0; justify-content: center; }
+}
+
+/* Professional polish for text nav */
+.side-nav.text-nav {
+  right: 20px;
+  gap: 10px;
+  z-index: 1200;
+}
+.side-nav.text-nav .side-nav-item {
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+.side-nav.text-nav .side-nav-item.active {
+  background: rgba(255, 107, 53, 0.2);
+}
+
+/* Respect safe areas on mobile */
+@supports (padding: max(env(safe-area-inset-bottom), 0px)) {
+  @media (max-width: 900px) {
+    .side-nav.text-nav { padding-bottom: max(env(safe-area-inset-bottom), 6px); }
+  }
+}
+
+/* Avoid overlapping important content */
+@media (max-width: 900px) {
+  .side-nav.text-nav { bottom: 12px; }
+}
+
+/* PPT/Print friendly: hide nav */
+@media print {
+  .side-nav { display: none !important; }
+}
+
+/* Desktop uniform width for elegance */
+@media (min-width: 901px) {
+  .side-nav.text-nav { right: 24px; }
+  .side-nav.text-nav .side-nav-item { min-width: 130px; justify-content: flex-start; }
+}
+
+/* Mobile bottom bar spacing so it doesn’t overlap funding legend */
+@media (max-width: 900px) {
+  .side-nav.text-nav { padding: 8px 10px; gap: 4px; }
+}
+
+/* Hamburger button (mobile) */
+.hamburger-btn {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1300;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(15,23,42,0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.hamburger-btn .bar {
+  position: relative;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  display: block;
+  margin: 3px 0;
+  transition: transform .2s ease;
+}
+
+/* Drawer */
+.mobile-drawer {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: rgba(15,23,42,0.96);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  z-index: 1250;
+  backdrop-filter: blur(10px);
+}
+.drawer-handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: rgba(255,255,255,0.3);
+  margin: 8px auto;
+}
+.drawer-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px 12px 16px;
+}
+.drawer-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.06);
+  color: #e2e8f0;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+}
+.drawer-item.active { background: rgba(255,107,53,0.18); border-color: rgba(255,107,53,0.55); color: #fff; }
+
+/* Responsive visibility */
+@media (max-width: 900px) {
+  .side-nav.text-nav { display: none !important; }
+  .hamburger-btn { display: inline-flex; }
+}
+@media (max-width: 520px) {
+  .drawer-items { grid-template-columns: repeat(2, 1fr); }
 }
