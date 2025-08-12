@@ -202,6 +202,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .device-mockup {
@@ -308,6 +310,45 @@
   border-radius: 8px;
 }
 
+.wifi-qr-card {
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wifi-qr-image {
+  width: 180px;
+  height: 180px;
+}
+
+.wifi-qr-caption {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.wifi-qr-title {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.wifi-qr-ssid, .wifi-qr-note {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.wifi-qr-actions { margin-top: 8px; }
+.btn-link {
+  font-size: 0.85rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+.btn-link:hover { text-decoration: underline; }
+
 @media (max-width: 768px) {
   .hero-container {
     grid-template-columns: 1fr;
@@ -343,9 +384,13 @@
 
   .qr-image { width: min(80%, 220px); }
   .qr-caption { font-size: 0.85rem; }
+
+  .wifi-qr-image { width: 160px; height: 160px; }
 }
 
 @media (max-width: 480px) {
   .qr-image { width: min(85%, 200px); }
   .qr-caption { font-size: 0.8rem; }
+
+  .wifi-qr-image { width: 140px; height: 140px; }
 }
