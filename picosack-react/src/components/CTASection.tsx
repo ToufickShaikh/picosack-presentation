@@ -114,12 +114,8 @@ const CTASection: React.FC = () => {
                 <div className="stat-label">Total Investment</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">18 weeks</div>
+                <div className="stat-value">6 weeks</div>
                 <div className="stat-label">To Market</div>
-              </div>
-              <div className="stat-item">
-                <div className="stat-value">₹50L</div>
-                <div className="stat-label">Year 1 Revenue</div>
               </div>
             </motion.div>
 
@@ -152,11 +148,11 @@ const CTASection: React.FC = () => {
               <div className="contact-details">
                 <div className="contact-item">
                   <span className="contact-label">Email:</span>
-                  <span className="contact-value">contact@picosack.in</span>
+                  <span className="contact-value">digitalhokage7@gmail.com</span>
                 </div>
                 <div className="contact-item">
                   <span className="contact-label">Phone:</span>
-                  <span className="contact-value">+91 XXXXX XXXXX</span>
+                  <span className="contact-value">+91 89394 87096</span>
                 </div>
               </div>
             </motion.div>
@@ -180,9 +176,10 @@ const CTASection: React.FC = () => {
             >
               <div className="visualization-container">
                 <div className="growth-metrics">
-                  <h4 className="metrics-title">Growth Projection</h4>
+                  <h4 className="metrics-title">Plan Highlights</h4>
                   
                   <div className="metrics-grid">
+                    {/* Remove revenue/monetary future projections */}
                     <motion.div 
                       className="metric-card"
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -190,9 +187,9 @@ const CTASection: React.FC = () => {
                       transition={{ delay: 0.5, duration: 0.6 }}
                       whileHover={{ scale: 1.05, y: -5 }}
                     >
-                      <div className="metric-icon">📈</div>
-                      <div className="metric-value">₹50L</div>
-                      <div className="metric-label">Year 1 Revenue</div>
+                      <div className="metric-icon">🛠️</div>
+                      <div className="metric-value">MVP</div>
+                      <div className="metric-label">Firmware + Portal</div>
                     </motion.div>
                     
                     <motion.div 
@@ -202,9 +199,9 @@ const CTASection: React.FC = () => {
                       transition={{ delay: 0.7, duration: 0.6 }}
                       whileHover={{ scale: 1.05, y: -5 }}
                     >
-                      <div className="metric-icon">🎯</div>
-                      <div className="metric-value">800</div>
-                      <div className="metric-label">Breakeven Units</div>
+                      <div className="metric-icon">🧪</div>
+                      <div className="metric-value">Pilot</div>
+                      <div className="metric-label">10–20 units</div>
                     </motion.div>
                     
                     <motion.div 
@@ -215,7 +212,7 @@ const CTASection: React.FC = () => {
                       whileHover={{ scale: 1.05, y: -5 }}
                     >
                       <div className="metric-icon">🚀</div>
-                      <div className="metric-value">18wk</div>
+                      <div className="metric-value">6wk</div>
                       <div className="metric-label">To Market</div>
                     </motion.div>
                   </div>
@@ -223,6 +220,7 @@ const CTASection: React.FC = () => {
 
                 <div className="chart-showcase">
                   <div className="growth-chart">
+                    {/* keep simple animated bars without labels implying revenue */}
                     <motion.div 
                       className="chart-bar quarter-1"
                       initial={{ scaleY: 0 }}
@@ -247,25 +245,6 @@ const CTASection: React.FC = () => {
                       animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
                       transition={{ duration: 1, delay: 1.8 }}
                     />
-                    
-                    <div className="chart-labels">
-                      <span>Q1</span>
-                      <span>Q2</span>
-                      <span>Q3</span>
-                      <span>Q4</span>
-                    </div>
-                  </div>
-                  
-                  <div className="chart-legend">
-                    <motion.div 
-                      className="legend-item"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                      transition={{ delay: 2, duration: 0.5 }}
-                    >
-                      <div className="legend-dot success"></div>
-                      <span>Revenue Growth Target</span>
-                    </motion.div>
                   </div>
                 </div>
               </div>

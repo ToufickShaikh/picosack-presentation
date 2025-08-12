@@ -9,11 +9,13 @@ import ProductSection from './components/ProductSection';
 import FundingSection from './components/FundingSection';
 import CTASection from './components/CTASection';
 import ProgressBar from './components/ProgressBar';
+import SideNav from './components/SideNav';
 
 function App() {
   return (
     <div className="App">
       <ProgressBar />
+      <SideNav />
       <main>
         <HeroSection />
         <ProblemSection />

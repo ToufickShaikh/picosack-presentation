@@ -13,28 +13,22 @@ interface PhaseData {
 const phaseData: PhaseData[] = [
   {
     phase: 'R&D',
-    duration: '4 weeks',
+    duration: '2 weeks',
     budget: '₹1,50,000',
-    deliverables: '3 working prototypes'
+    deliverables: 'MVP firmware + captive portal'
   },
   {
-    phase: 'Pilot Production',
-    duration: '6 weeks', 
+    phase: 'Pilot Preparation',
+    duration: '2 weeks',
     budget: '₹1,50,000',
-    deliverables: '50 field-test units'
+    deliverables: '10–20 pilot units for field testing'
   },
   {
-    phase: 'Market Launch',
-    duration: '8 weeks',
-    budget: '₹1,00,000', 
-    deliverables: 'Chennai rollout'
+    phase: 'Soft Launch',
+    duration: '2 weeks',
+    budget: '₹1,00,000',
+    deliverables: 'Chennai soft launch + feedback loop'
   }
-];
-
-const roiData = [
-  { label: 'Breakeven', value: '~800 units sold' },
-  { label: 'Year 1 Revenue', value: '₹50 lakhs (10,000 units)' },
-  { label: 'Year 2 Expansion', value: 'Pan-India distribution' }
 ];
 
 const FundingSection: React.FC = () => {
@@ -75,7 +69,7 @@ const FundingSection: React.FC = () => {
           <motion.div variants={itemVariants} className="section-header">
             <h2 className="section-title">Funding Requirements</h2>
             <p className="section-description">
-              Strategic investment roadmap to market leadership
+              6-week pre-launch plan: build MVP, pilot in the field, and soft launch
             </p>
           </motion.div>
 
@@ -111,22 +105,6 @@ const FundingSection: React.FC = () => {
                     </tbody>
                   </table>
                 </div>
-
-                <div className="roi-section">
-                  <h3>Projected ROI:</h3>
-                  <ul className="roi-list">
-                    {roiData.map((item, index) => (
-                      <motion.li
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 + 1 }}
-                      >
-                        <span className="roi-label">{item.label}:</span> {item.value}
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
               </div>
             </motion.div>
 
@@ -158,7 +136,7 @@ const FundingSection: React.FC = () => {
                       {/* Background circle */}
                       <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2"/>
                       
-                      {/* R&D Slice (37.5%) - 135 degrees */}
+                      {/* R&D Slice (37.5%) */}
                       <motion.path 
                         d="M200,80 A120,120 0 0,1 320,200 L200,200 Z" 
                         fill="url(#rdGradient)"
@@ -170,7 +148,7 @@ const FundingSection: React.FC = () => {
                         style={{ transformOrigin: "200px 200px" }}
                       />
                       
-                      {/* Pilot Slice (37.5%) - 135 degrees */}
+                      {/* Pilot Slice (37.5%) */}
                       <motion.path 
                         d="M320,200 A120,120 0 0,1 200,320 L200,200 Z" 
                         fill="url(#pilotGradient)"
@@ -182,7 +160,7 @@ const FundingSection: React.FC = () => {
                         style={{ transformOrigin: "200px 200px" }}
                       />
                       
-                      {/* Launch Slice (25%) - 90 degrees */}
+                      {/* Launch Slice (25%) */}
                       <motion.path 
                         d="M200,320 A120,120 0 0,1 80,200 L200,200 Z" 
                         fill="url(#launchGradient)"
@@ -244,57 +222,57 @@ const FundingSection: React.FC = () => {
                 </div>
 
                 <div className="timeline">
-                  <h4>Development Timeline</h4>
+                  <h4>6-Week Timeline</h4>
                   <div className="timeline-container">
                     <motion.div 
                       className="timeline-line"
                       initial={{ scaleX: 0 }}
                       animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
-                      transition={{ duration: 1.5, delay: 1.8 }}
+                      transition={{ duration: 1.2, delay: 1.6 }}
                     />
                     
                     <motion.div 
                       className="timeline-milestone"
-                      style={{ left: '22%' }}
+                      style={{ left: '33%' }}
+                      initial={{ scale: 0, y: 20 }}
+                      animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
+                      transition={{ duration: 0.5, delay: 2.0, type: "spring", stiffness: 200 }}
+                    >
+                      <div className="milestone-marker rd-marker"></div>
+                      <div className="milestone-content">
+                        <div className="milestone-week">Week 2</div>
+                        <div className="milestone-title">MVP Ready</div>
+                        <div className="milestone-desc">Firmware + portal MVP</div>
+                      </div>
+                    </motion.div>
+                    
+                    <motion.div 
+                      className="timeline-milestone"
+                      style={{ left: '66%' }}
                       initial={{ scale: 0, y: 20 }}
                       animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
                       transition={{ duration: 0.5, delay: 2.2, type: "spring", stiffness: 200 }}
                     >
-                      <div className="milestone-marker rd-marker"></div>
+                      <div className="milestone-marker pilot-marker"></div>
                       <div className="milestone-content">
                         <div className="milestone-week">Week 4</div>
-                        <div className="milestone-title">Prototypes Ready</div>
-                        <div className="milestone-desc">3 working models</div>
+                        <div className="milestone-title">Pilot Testing</div>
+                        <div className="milestone-desc">10–20 field units</div>
                       </div>
                     </motion.div>
                     
                     <motion.div 
                       className="timeline-milestone"
-                      style={{ left: '56%' }}
+                      style={{ left: '95%' }}
                       initial={{ scale: 0, y: 20 }}
                       animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
                       transition={{ duration: 0.5, delay: 2.4, type: "spring", stiffness: 200 }}
                     >
-                      <div className="milestone-marker pilot-marker"></div>
-                      <div className="milestone-content">
-                        <div className="milestone-week">Week 10</div>
-                        <div className="milestone-title">Pilot Production</div>
-                        <div className="milestone-desc">50 field-test units</div>
-                      </div>
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="timeline-milestone"
-                      style={{ left: '89%' }}
-                      initial={{ scale: 0, y: 20 }}
-                      animate={inView ? { scale: 1, y: 0 } : { scale: 0, y: 20 }}
-                      transition={{ duration: 0.5, delay: 2.6, type: "spring", stiffness: 200 }}
-                    >
                       <div className="milestone-marker launch-marker"></div>
                       <div className="milestone-content">
-                        <div className="milestone-week">Week 18</div>
-                        <div className="milestone-title">Market Launch</div>
-                        <div className="milestone-desc">Chennai rollout</div>
+                        <div className="milestone-week">Week 6</div>
+                        <div className="milestone-title">Soft Launch</div>
+                        <div className="milestone-desc">Chennai rollout + feedback</div>
                       </div>
                     </motion.div>
                   </div>

@@ -53,6 +53,14 @@ const ProductSection: React.FC = () => {
     triggerOnce: true,
   });
 
+  // Map product to image path in public
+  const imgFor = (name: string) => {
+    const base = process.env.PUBLIC_URL ?? '';
+    if (name.includes('Basic')) return `${base}/picobasic.png`;
+    if (name.includes('Pro')) return `${base}/picopro.png`;
+    return `${base}/picoenter.png`;
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -120,49 +128,12 @@ const ProductSection: React.FC = () => {
 
                 <div className="product-header">
                   <motion.div 
-                    className="device-illustration"
-                    initial={{ scale: 0, rotateY: -180 }}
-                    animate={inView ? { scale: 1, rotateY: 0 } : { scale: 0, rotateY: -180 }}
-                    transition={{ duration: 0.8, delay: index * 0.2 + 0.3, type: "spring", stiffness: 100 }}
-                    whileHover={{ 
-                      scale: 1.1, 
-                      rotateY: 15,
-                      transition: { duration: 0.3 }
-                    }}
+                    className="product-image"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.9, opacity: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.15 + 0.2 }}
                   >
-                    <div className={`device-mockup tier-${index + 1}`}>
-                      <div className="device-frame">
-                        <div className="device-screen">
-                          <div className="screen-content">
-                            <div className="screen-header">
-                              <div className="header-logo">PicoSack</div>
-                              <div className="header-badge">{product.name.split(' ')[1]}</div>
-                            </div>
-                            <div className="screen-body">
-                              <div className="menu-grid">
-                                <div className="menu-item active">🍔 Burger</div>
-                                <div className="menu-item">🍕 Pizza</div>
-                                <div className="menu-item">🥤 Drinks</div>
-                                <div className="menu-item">🍰 Dessert</div>
-                              </div>
-                              <div className="action-bar">
-                                <div className="cart-icon">🛒</div>
-                                <div className="order-count">3</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Device Features Indicators */}
-                        <div className="device-features">
-                          {index >= 1 && <div className="feature-dot touch-indicator" title="Touch Screen"></div>}
-                          {index >= 2 && <div className="feature-dot payment-indicator" title="Payment System"></div>}
-                        </div>
-                      </div>
-                      
-                      {/* Device Base/Stand */}
-                      <div className="device-base"></div>
-                    </div>
+                    <img src={imgFor(product.name)} alt={product.name} />
                   </motion.div>
 
                   <h3 className="product-name">{product.name}</h3>

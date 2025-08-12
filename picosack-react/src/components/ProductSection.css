@@ -80,35 +80,25 @@
   margin-bottom: 2rem;
 }
 
-.device-illustration {
-  margin-bottom: 1.5rem;
+.product-image {
+  width: 100%;
   display: flex;
   justify-content: center;
-  perspective: 1000px;
+  margin-bottom: 1rem;
 }
 
-.device-mockup {
-  position: relative;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  transform-style: preserve-3d;
-  transition: all 0.3s ease;
+.product-image img {
+  width: 220px;
+  max-width: 80%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+  border-radius: 12px;
+  background: #fff;
 }
 
-.tier-1 {
-  width: 120px;
-  height: 160px;
-}
-
-.tier-2 {
-  width: 140px;
-  height: 180px;
-}
-
-.tier-3 {
-  width: 160px;
-  height: 200px;
-}
+/* Remove old device mockup spacing if present */
+.device-illustration, .device-mockup { display: none; }
 
 .device-frame {
   background: linear-gradient(145deg, #1e293b, #334155);
