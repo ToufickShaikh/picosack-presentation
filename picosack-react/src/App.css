@@ -28,6 +28,9 @@ main {
 .section {
   padding: 6rem 0;
   position: relative;
+  min-height: 100vh; /* Uniform slide height */
+  display: flex;      /* Center content vertically */
+  align-items: center;
 }
 
 .container {
@@ -67,9 +70,17 @@ html {
 @media (max-width: 768px) {
   .section {
     padding: 4rem 0;
+    min-height: 100vh; /* keep uniform on mobile too */
   }
   
   .container {
     padding: 0 1rem;
   }
+}
+
+/* Print styles */
+@media print {
+  html, body { height: auto; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  section { break-after: page; }
 }

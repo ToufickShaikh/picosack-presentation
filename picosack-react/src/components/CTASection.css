@@ -7,6 +7,7 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  justify-content: center; /* uniform centering */
 }
 
 .cta-background {

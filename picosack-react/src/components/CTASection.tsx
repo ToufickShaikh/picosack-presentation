@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './CTASection.css';
+import { TOTAL_BUDGET, TIME_TO_MARKET, formatINR } from '../constants/budget';
 
 const CTASection: React.FC = () => {
   const [ref, inView] = useInView({
@@ -110,17 +111,17 @@ const CTASection: React.FC = () => {
             </motion.h1>
 
             <motion.p variants={itemVariants} className="cta-description">
-              We're seeking ₹4 lakhs to launch our pilot program in Chennai
+              {`We're seeking ${formatINR(TOTAL_BUDGET)} to launch our pilot program in Chennai`}
             </motion.p>
 
             <motion.div variants={itemVariants} className="cta-stats">
               <div className="stat-item">
-                <div className="stat-value">₹4L</div>
+                <div className="stat-value">{formatINR(TOTAL_BUDGET)}</div>
                 <div className="stat-label">Total Investment</div>
               </div>
               <div className="stat-item">
-                <div className="stat-value">6 weeks</div>
-                <div className="stat-label">To Market</div>
+                <div className="stat-value">{TIME_TO_MARKET}</div>
+                <div className="stat-label">Time to Market</div>
               </div>
             </motion.div>
 
@@ -217,8 +218,8 @@ const CTASection: React.FC = () => {
                       whileHover={{ scale: 1.05, y: -5 }}
                     >
                       <div className="metric-icon">🚀</div>
-                      <div className="metric-value">6wk</div>
-                      <div className="metric-label">To Market</div>
+                      <div className="metric-value">6 mo</div>
+                      <div className="metric-label">Time to Market</div>
                     </motion.div>
                   </div>
                 </div>
