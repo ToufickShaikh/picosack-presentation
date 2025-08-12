@@ -1,0 +1,13 @@
+[build]
+  base = "picosack-react"
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# SPA fallback (safe even if you only use hash routes)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
