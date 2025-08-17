@@ -1,49 +1,69 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import './FundingSection.css';
-import { BUDGETS, TOTAL_BUDGET, TIME_TO_MARKET, formatINR } from '../constants/budget';
+import { BUDGETS as INITIAL_BUDGETS, TIME_TO_MARKET, formatINR } from '../constants/budget';
 
-// Define merged phases (no separate additional table)
+// PhaseData type
 interface PhaseData { key: string; phase: string; duration: string; amount: number; deliverables: string; colorClass: string; }
 
-const mergedPhases: PhaseData[] = [
-  {
-    key: 'hd',
-    phase: 'Design + R&D',
-    duration: 'Months 1–2',
-    amount: BUDGETS.hardwareDesign + BUDGETS.rd,
-    deliverables: 'HW architecture, PCB stackup, MVP firmware & captive portal',
-    colorClass: 'hd-color'
-  },
-  {
-    key: 'hdev',
-    phase: 'Development + Pilot',
-    duration: 'Months 3–4',
-    amount: BUDGETS.hardwareDevelopment + BUDGETS.pilot,
-    deliverables: 'Prototype builds and 10–20 unit field pilot',
-    colorClass: 'hdev-color'
-  },
-  {
-    key: 'casing',
-    phase: 'Casing',
-    duration: 'Month 5',
-    amount: BUDGETS.casingDesign,
-    deliverables: 'Industrial casing design & fabrication',
-    colorClass: 'casing-color'
-  },
-  {
-    key: 'test',
-    phase: 'Testing + Launch',
-    duration: 'Month 6',
-    amount: BUDGETS.ipcA600Testing + BUDGETS.launch,
-    deliverables: 'IPC-A-600 compliance, soft launch, feedback loop',
-    colorClass: 'test-color'
-  }
-];
+type Budgets = typeof INITIAL_BUDGETS;
 
 const FundingSection: React.FC = () => {
+  const [budgets, setBudgets] = useState<Budgets>(INITIAL_BUDGETS);
+  const totalBudget = useMemo(() => {
+    const vals = Object.values(budgets) as number[];
+    return vals.reduce((acc, budget) => acc + budget, 0);
+  }, [budgets]);
+  
+  const mergedPhases: PhaseData[] = [
+    {
+      key: 'hd',
+      phase: 'Design + R&D',
+      duration: 'Months 1–2',
+      amount: budgets.hardwareDesign + budgets.rd,
+      deliverables: 'HW architecture, PCB stackup, MVP firmware & captive portal',
+      colorClass: 'hd-color'
+    },
+    {
+      key: 'hdev',
+      phase: 'Development + Pilot',
+      duration: 'Months 3–4',
+      amount: budgets.hardwareDevelopment + budgets.pilot,
+      deliverables: 'Prototype builds and 10–20 unit field pilot',
+      colorClass: 'hdev-color'
+    },
+    {
+      key: 'casing',
+      phase: 'Casing',
+      duration: 'Month 5',
+      amount: budgets.casingDesign,
+      deliverables: 'Industrial casing design & fabrication',
+      colorClass: 'casing-color'
+    },
+    {
+      key: 'test',
+      phase: 'Testing + Launch',
+      duration: 'Month 6',
+      amount: budgets.ipcA600Testing + budgets.launch,
+      deliverables: 'IPC-A-600 compliance, soft launch, feedback loop',
+      colorClass: 'test-color'
+    }
+  ];
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true });
+
+  // load saved budgets
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('presentation_budgets');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setBudgets((prev: Budgets) => ({ ...prev, ...(parsed as Partial<Budgets>) } as Budgets));
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
   const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.2 } } };
   const itemVariants = { hidden: { y: 30, opacity: 0 }, visible: { y: 0, opacity: 1, transition: { duration: 0.6, ease: 'easeOut' as const } } };
 
@@ -59,7 +79,32 @@ const FundingSection: React.FC = () => {
           <div className="funding-grid">
             <motion.div variants={itemVariants} className="funding-details">
               <div className="investment-summary">
-                <h3 className="investment-title">Total Investment: <span className="highlight">{formatINR(TOTAL_BUDGET)}</span></h3>
+                <h3 className="investment-title">Total Investment: <span className="highlight">{formatINR(totalBudget)}</span></h3>
+                
+                    <div className="budget-editor">
+                      <details>
+                        <summary>Edit budgets</summary>
+                        <div className="editor-grid">
+                          {Object.keys(budgets).map((k) => (
+                            <label key={k} className="editor-row">
+                              <span className="editor-key">{k}</span>
+                              <input
+                                type="number"
+                                value={(budgets as any)[k]}
+                                onChange={(e) => {
+                                  const v = Number(e.target.value || 0);
+                                  setBudgets((prev) => ({ ...prev, [k]: v }));
+                                }}
+                              />
+                            </label>
+                          ))}
+                          <div className="editor-actions">
+                            <button type="button" onClick={() => { localStorage.removeItem('presentation_budgets'); setBudgets(INITIAL_BUDGETS); }}>Reset</button>
+                            <button type="button" onClick={() => { localStorage.setItem('presentation_budgets', JSON.stringify(budgets)); }}>Save</button>
+                          </div>
+                        </div>
+                      </details>
+                    </div>
                 <div className="phases-table-container">
                   <table className="phases-table">
                     <thead>
@@ -93,7 +138,7 @@ const FundingSection: React.FC = () => {
                     <div className="allocation-chart">
                       <div className="allocation-bar" aria-label="Budget allocation segmented bar">
                         {mergedPhases.map((p, idx) => {
-                          const percent = (p.amount / TOTAL_BUDGET) * 100;
+                          const percent = totalBudget > 0 ? (p.amount / totalBudget) * 100 : 0;
                           const title = `${p.phase} · ${formatINR(p.amount)} · ${percent.toFixed(1)}%`;
                           const short = `${p.phase.split(' ')[0]} ${percent.toFixed(0)}%`;
                           return (
@@ -144,7 +189,7 @@ const FundingSection: React.FC = () => {
 
                     <div className="allocation-legend enhanced">
                       {mergedPhases.map((p, idx) => {
-                        const percent = (p.amount / TOTAL_BUDGET) * 100;
+                        const percent = totalBudget > 0 ? (p.amount / totalBudget) * 100 : 0;
                         return (
                           <motion.div key={p.key} className="legend-item" initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }} transition={{ delay: 0.9 + idx * 0.08 }}>
                             <div className={`legend-color ${p.colorClass}`}></div>
