@@ -1,0 +1,434 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PicoSack — Circuit Diagram & Flow Chart (Printable)</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --accent:#ff6b35;
+      --card:#fbfbfb;
+    }
+
+    html,body{height:100%;margin:0;padding:0;font-family:Inter, Arial, sans-serif;background:var(--bg);color:var(--ink);-webkit-print-color-adjust:exact}
+    .page{max-width:980px;margin:28px auto;padding:28px}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+    h1{font-size:22px;margin:0 0 6px}
+    p.lead{margin:6px 0 18px;color:var(--muted);max-width:680px}
+    .controls{display:flex;gap:8px}
+    button.print{background:var(--accent);color:white;border:0;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:600}
+    button.print:active{transform:translateY(1px)}
+    .section{margin-top:28px}
+    .section h2{font-size:16px;margin:0 0 12px}
+    .diagram-wrap{background:var(--card);border:1px solid #e6e6e6;padding:16px;border-radius:8px;box-shadow:0 1px 2px rgba(16,24,40,0.03)}
+    svg{width:100%;height:auto;display:block;min-height:120px}
+    pre.ascii{font-family:monospace;background:#0f172a;color:#f8fafc;padding:12px;border-radius:6px;overflow:auto;font-size:12px;line-height:1.25}
+    footer{margin-top:28px;color:var(--muted);font-size:13px}
+
+    /* flows layout */
+    .flows{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+    .flow-card{background:white;border:1px solid #e6e6e6;border-radius:8px;padding:14px}
+    .flow-card ol{margin:0;padding-left:1.1rem}
+    .flow-card li{margin:10px 0;color:var(--ink)}
+    .flow-card ul{margin:6px 0 0 1.1rem}
+
+  .section h3{font-size:14px;margin:0 0 8px;color:var(--ink)}
+  ol,ul{counter-reset:item}
+  li{counter-increment:item}
+  li:before{content:counter(item) ". ";font-weight:600;margin-right:6px}
+    
+    /* product grid */
+    .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+    .product-card{background:white;border:1px solid #e6e6e6;border-radius:8px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+    .product-card img{width:160px;height:auto;object-fit:contain}
+    .product-card .price{font-weight:700;color:var(--accent)}
+    .product-card ul{list-style:none;padding:0;margin:6px 0 0 0}
+    .product-card li{font-size:13px;margin:6px 0;padding-left:0}
+
+    @media (max-width:980px){.products-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){.products-grid{grid-template-columns:1fr}}
+
+    @media print {
+      .products-grid{grid-template-columns:1fr !important}
+      .product-card,img{page-break-inside:avoid}
+    }
+
+    /* small screens */
+    @media (max-width:820px){
+      .page{padding:18px}
+      .flows{grid-template-columns:1fr}
+    }
+
+    /* Print styles to produce a clean A4 PDF */
+    @page { size: A4 portrait; margin: 12mm; }
+    @media print {
+      /* force white background when printing; ask browser to keep colors */
+  body{background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+
+      /* Make the page size match A4 printable area */
+      .page{width:calc(210mm - 24mm);margin:0 auto;padding:8mm;max-width:none}
+
+      /* hide interactive controls and footer in print */
+      header .controls, footer {display:none}
+
+      /* slightly smaller headings for PDF */
+      h1{font-size:18px}
+
+      /* diagrams should have some padding but no borders in print */
+      .diagram-wrap{border:0;padding:6mm}
+
+      /* scale SVGs to container width and avoid breaking them across pages */
+      svg{width:100%;height:auto;break-inside:avoid;page-break-inside:avoid}
+
+      /* avoid page breaks inside key visual blocks */
+      .diagram-wrap, .flow-card, pre.ascii, .product-card {page-break-inside: avoid; -webkit-column-break-inside: avoid; break-inside: avoid}
+
+      /* stack flows into single column for print */
+      .flows{grid-template-columns:1fr}
+
+      /* constrain product images for better fitting */
+      .product-card img{max-width:140px;height:auto}
+
+      /* monospace ASCII should be a bit smaller on print */
+      pre.ascii{font-size:10px}
+
+      /* widows/orphans control for nicer typography */
+      h1,h2,h3{orphans:3;widows:3}
+
+      /* ensure all images scale down to page width */
+      img{max-width:100%;height:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1>PicoSack System Architecture — Circuit Diagram & Flow Chart</h1>
+        <p class="lead">Printable page: use the Print button (or browser Print → Save as PDF). Diagrams are vector SVG and scale for PDF.</p>
+      </div>
+      <div class="controls">
+        <button class="print" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Circuit Diagram (system blocks)</h2>
+      <div class="diagram-wrap">
+        <!-- SVG representation of the ASCII diagram -->
+        <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PicoSack circuit diagram">
+          <defs>
+            <style>
+              .box{fill:#ffffff;stroke:#0f172a;stroke-width:2;rx:8;}
+              .subbox{fill:#f8fafc;stroke:#9ca3af;stroke-width:1}
+              .label{font-family:Inter, Arial, sans-serif;font-size:13px;fill:#0f172a}
+              .small{font-size:11px;fill:#374151}
+              .arrow{stroke:#0f172a;stroke-width:2;fill:none;marker-end:url(#arr)}
+            </style>
+            <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#0f172a" />
+            </marker>
+          </defs>
+
+          <!-- Customer Smartphone -->
+          <rect x="380" y="12" width="240" height="60" class="box" rx="8" style="overflow:visible"/>
+          <foreignObject x="380" y="16" width="240" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.1;">
+              <div style="font-weight:700">Customer Smartphone</div>
+              <div style="font-size:11px;color:#374151">(WiFi Connection)</div>
+            </div>
+          </foreignObject>
+
+          <!-- Arrow down to Device -->
+          <path d="M500 72 L500 120" class="arrow"/>
+
+          <!-- PicoSack Device box -->
+          <rect x="120" y="120" width="760" height="280" class="box" rx="10"/>
+          <foreignObject x="360" y="140" width="280" height="32">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:14px;color:#0f172a;display:flex;align-items:center;justify-content:center;font-weight:700;text-align:center;">PicoSack Device</div>
+          </foreignObject>
+
+          <!-- Internal components inside device -->
+          <rect x="160" y="170" width="220" height="80" class="subbox" rx="6"/>
+          <foreignObject x="160" y="178" width="220" height="64">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">ESP32-C6</div>
+              <div style="font-size:11px;color:#374151">Processor (WiFi6 / BLE5)</div>
+            </div>
+          </foreignObject>
+
+          <rect x="410" y="170" width="180" height="80" class="subbox" rx="6"/>
+          <foreignObject x="410" y="178" width="180" height="64">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">8MB PSRAM</div>
+              <div style="font-size:11px;color:#374151">Fast memory for menu storage</div>
+            </div>
+          </foreignObject>
+
+          <rect x="610" y="170" width="180" height="80" class="subbox" rx="6"/>
+          <foreignObject x="610" y="182" width="180" height="56">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">MicroSD</div>
+              <div style="font-size:11px;color:#374151">Additional storage (images / orders)</div>
+            </div>
+          </foreignObject>
+
+          <!-- Lines showing connections -->
+          <path d="M380 210 L410 210" stroke="#0f172a" stroke-width="2"/>
+          <path d="M590 210 L610 210" stroke="#0f172a" stroke-width="2"/>
+
+          <!-- Peripherals row -->
+          <rect x="180" y="270" width="200" height="80" class="subbox" rx="6"/>
+          <foreignObject x="180" y="284" width="200" height="48">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;font-weight:700">3.5" Touch Display</div>
+          </foreignObject>
+
+          <rect x="420" y="270" width="200" height="80" class="subbox" rx="6"/>
+          <foreignObject x="420" y="284" width="200" height="48">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;font-weight:600">Bluetooth Printer Interface</div>
+          </foreignObject>
+
+          <rect x="660" y="270" width="200" height="80" class="subbox" rx="6"/>
+          <foreignObject x="660" y="284" width="200" height="56">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">Power Management</div>
+              <div style="font-size:11px;color:#374151">Battery backup support</div>
+            </div>
+          </foreignObject>
+
+          <!-- Arrows from internal to peripherals -->
+          <path d="M270 250 L270 270" class="arrow"/>
+          <path d="M500 250 L500 270" class="arrow"/>
+          <path d="M730 250 L730 270" class="arrow"/>
+
+          <!-- Optional cloud sync to side -->
+          <rect x="380" y="420" width="240" height="70" class="box" rx="8"/>
+          <foreignObject x="380" y="430" width="240" height="48">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">Swiggy / Zomato Cloud Sync</div>
+              <div style="font-size:11px;color:#374151">(Optional)</div>
+            </div>
+          </foreignObject>
+
+          <!-- Arrow from device to cloud -->
+          <path d="M500 400 L500 420" class="arrow"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Operational Flows</h2>
+      <div class="flows">
+        <div class="flow-card diagram-wrap">
+          <h3 style="margin-top:0;margin-bottom:8px;font-size:14px">Customer Flow</h3>
+          <ol>
+            <li>Connect to "PicoSack_WiFi" —&gt;</li>
+            <li>Browser automatically opens —&gt;</li>
+            <li>Menu displays instantly —&gt;</li>
+            <li>Place order —
+              <ul>
+                <li>Online: Syncs to Swiggy</li>
+                <li>Offline: Stores locally</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+
+        <div class="flow-card diagram-wrap">
+          <h3 style="margin-top:0;margin-bottom:8px;font-size:14px">Business Owner Flow</h3>
+          <ol>
+            <li>Power on device —&gt;</li>
+            <li>Update menu via touchscreen —&gt;</li>
+            <li>View orders —&gt;</li>
+            <li>Print bills via Bluetooth</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Flow Chart (high level)</h2>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PicoSack flow chart">
+          <defs>
+            <style>
+              .fbox{fill:#ffffff;stroke:#0f172a;stroke-width:2;rx:8}
+              .ftext{font-family:Inter, Arial, sans-serif;font-size:12px;fill:#0f172a}
+              .fsmall{font-size:11px;fill:#374151}
+              .farrow{stroke:#0f172a;stroke-width:2;fill:none;marker-end:url(#farr)}
+            </style>
+            <marker id="farr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#0f172a" />
+            </marker>
+          </defs>
+
+          <!-- Flow boxes -->
+          <rect x="60" y="40" width="200" height="60" class="fbox" rx="8"/>
+          <foreignObject x="60" y="44" width="200" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">Customer connects</div>
+              <div style="font-size:11px;color:#374151">(WiFi captive portal)</div>
+            </div>
+          </foreignObject>
+
+          <rect x="320" y="40" width="220" height="60" class="fbox" rx="8"/>
+          <foreignObject x="320" y="44" width="220" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;font-weight:700">Device serves menu</div>
+          </foreignObject>
+
+          <rect x="660" y="40" width="220" height="60" class="fbox" rx="8"/>
+          <foreignObject x="660" y="44" width="220" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;font-weight:700">Customer places order</div>
+          </foreignObject>
+
+          <!-- arrows top row -->
+          <path d="M260 70 L320 70" class="farrow"/>
+          <path d="M540 70 L660 70" class="farrow"/>
+
+          <!-- Order stored locally -->
+          <rect x="320" y="140" width="220" height="60" class="fbox" rx="8"/>
+          <foreignObject x="320" y="144" width="220" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">Order stored locally</div>
+              <div style="font-size:11px;color:#374151">buffered until sync</div>
+            </div>
+          </foreignObject>
+
+          <path d="M770 100 L770 140" class="farrow"/>
+          <path d="M770 200 L770 220" class="farrow"/>
+
+          <!-- Sync to cloud -->
+          <rect x="660" y="220" width="220" height="60" class="fbox" rx="8"/>
+          <foreignObject x="660" y="224" width="220" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">Sync to cloud</div>
+              <div style="font-size:11px;color:#374151">(when online)</div>
+            </div>
+          </foreignObject>
+
+          <!-- Optional external services -->
+          <rect x="60" y="220" width="220" height="60" class="fbox" rx="8"/>
+          <foreignObject x="60" y="224" width="220" height="52">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:700">External services</div>
+              <div style="font-size:11px;color:#374151">(Swiggy, Zomato sync)</div>
+            </div>
+          </foreignObject>
+
+          <!-- Arrows between middle and bottom -->
+          <path d="M430 100 L430 140" class="farrow"/>
+          <path d="M430 200 L430 220" class="farrow"/>
+
+          <!-- Decision / optional note -->
+          <rect x="320" y="320" width="560" height="80" class="fbox" rx="8"/>
+          <foreignObject x="320" y="332" width="560" height="56">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Inter, Arial, sans-serif;font-size:12px;color:#0f172a;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;">
+              <div style="font-weight:600">Optional: Push notifications / analytics / accounting export</div>
+            </div>
+          </foreignObject>
+
+        </svg>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Products</h2>
+      <div class="diagram-wrap">
+        <div class="products-grid">
+          <div class="product-card">
+            <img src="./picosack-react/public/picobasic.png" alt="PicoSack Basic">
+            <div class="name">PicoSack Basic</div>
+            <div class="price">₹1,500</div>
+            <ul>
+              <li>Digital menus/notices</li>
+              <li>Wi-Fi captive portal</li>
+              <li>8MB storage</li>
+            </ul>
+            <div class="ideal" style="font-size:12px;color:var(--muted)">Ideal for street vendors, schools</div>
+          </div>
+
+          <div class="product-card">
+            <img src="./picosack-react/public/picopro.png" alt="PicoSack Pro">
+            <div class="name">PicoSack Pro</div>
+            <div class="price">₹3,500</div>
+            <ul>
+              <li>Order management</li>
+              <li>Bluetooth printing</li>
+              <li>Touchscreen interface</li>
+            </ul>
+            <div class="ideal" style="font-size:12px;color:var(--muted)">Ideal for restaurants, cafes</div>
+          </div>
+
+          <div class="product-card">
+            <img src="./picosack-react/public/picoenter.png" alt="PicoSack Enterprise">
+            <div class="name">PicoSack Enterprise</div>
+            <div class="price">₹6,800</div>
+            <ul>
+              <li>Payments (UPI / card)</li>
+              <li>Marketplace sync</li>
+              <li>GST billing</li>
+            </ul>
+            <div class="ideal" style="font-size:12px;color:var(--muted)">Ideal for retail stores, hotels</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:22px">Reference (ASCII)</h2>
+      <div class="diagram-wrap">
+        <pre class="ascii">PicoSack System Architecture
+───────────────────────────────────────
+
+                          ┌───────────────┐
+                          │               │
+                          │   Customer    │
+                          │  Smartphone   │
+                          │               │
+                          └───────┬───────┘
+                                  │ (WiFi Connection)
+                                  ▼
+┌─────────────────────────────────────────────────────┐
+│                   PicoSack Device                   │
+│ ┌─────────────┐    ┌─────────────┐    ┌───────────┐ │
+│ │             │    │             │    │           │ │
+│ │  ESP32-C6   │◄──►│  8MB PSRAM  │◄──►│ MicroSD   │ │
+│ │  Processor  │    │             │    │ Storage   │ │
+│ │             │    └─────────────┘    └───────────┘ │
+│ └───────┬─────┘                                     │
+│         │                                           │
+│         ▼                                           │
+│ ┌─────────────┐    ┌─────────────┐    ┌───────────┐ │
+│ │  3.5" Touch │    │  Bluetooth  │    │   Power   │ │
+│ │   Display   │    │  Printer    │    │ Management│ │
+│ │             │    │  Interface  │    │           │ │
+│ └─────────────┘    └─────────────┘    └───────────┘ │
+└─────────────────────────────────────────────────────┘
+                                  ▲
+                                  │ (Optional)
+                          ┌───────┴───────┐
+                          │               │
+                          │  Swiggy/Zomato│
+                          │   Cloud Sync  │
+                          │               │
+                          └───────────────┘
+
+Key Components:
+1. ESP32-C6: Main processor with WiFi 6/Bluetooth 5
+2. 8MB PSRAM: Fast memory for menu storage
+3. MicroSD: Additional storage for images/orders
+4. Touch Display: Interface for business owners
+5. Printer Interface: Connects to thermal printers
+6. Power Management: Battery backup support
+</pre>
+      </div>
+    </section>
+
+    <footer>
+      Generated for PicoSack project — open this file in a browser and choose Print → Save as PDF to get a printable PDF.
+    </footer>
+  </div>
+</body>
+</html>
